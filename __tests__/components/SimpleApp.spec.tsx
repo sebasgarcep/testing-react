@@ -2,6 +2,8 @@ import { render, screen } from "@testing-library/react";
 
 import { Client } from "@/types";
 
+import { mockPokemonData } from "../mocks";
+
 describe("SimpleApp", () => {
     let SimpleApp: typeof import("@/components/SimpleApp").default;
 
@@ -11,11 +13,7 @@ describe("SimpleApp", () => {
 
     beforeAll(async () => {
         jest.mock("../../src/api", () => MockClient);
-        (MockClient.getPokemon as jest.Mock).mockResolvedValue({
-            name: "charmander",
-            picture: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/4.png",
-            description: "Obviously prefers hot places. When it rains, steam is said to spout from the tip of its tail.",
-        });
+        (MockClient.getPokemon as jest.Mock).mockResolvedValue(mockPokemonData);
 
         SimpleApp = (await import("@/components/SimpleApp")).default;
     });

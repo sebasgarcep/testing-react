@@ -6,9 +6,9 @@ import type { Pokemon } from "@/types";
 import * as api from "@/api";
 
 /**
- * Write an app in the most straight-forward way possible.
+ * Introduce Single-Responsibility to the app.
  */
-export default function SimpleApp() {
+export function useSRAppProps() {
     const [data, setData] = useState<Pokemon | null>(null);
 
     const updateData = useCallback(async () => {
@@ -18,11 +18,22 @@ export default function SimpleApp() {
 
     useEffect(() => { updateData(); }, [updateData]);
 
+    return { data };
+}
+
+export function SRAppView({ data }: ReturnType<typeof useSRAppProps>) {
     return (
         <div>
             <h1>{data?.name}</h1>
             <img alt="" src={data?.picture} />
             {data?.description}
         </div>
+    );
+}
+
+export default function SRApp() {
+    const props = useSRAppProps();
+    return (
+        <SRAppView {...props} />
     );
 }
