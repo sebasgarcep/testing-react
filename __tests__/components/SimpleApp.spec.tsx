@@ -1,19 +1,19 @@
 import { render, screen } from "@testing-library/react";
 
-import { Client } from "@/types";
+import type { Client } from "@/types";
 
 import { mockPokemonData } from "../mocks";
 
 describe("SimpleApp", () => {
     let SimpleApp: typeof import("@/components/SimpleApp").default;
 
-    const MockClient: Client = {
+    const mockClient: Client = {
         getPokemon: jest.fn(),
     };
 
     beforeAll(async () => {
-        jest.mock("../../src/api", () => MockClient);
-        (MockClient.getPokemon as jest.Mock).mockResolvedValue(mockPokemonData);
+        jest.mock("../../src/api", () => mockClient);
+        (mockClient.getPokemon as jest.Mock).mockResolvedValue(mockPokemonData);
 
         SimpleApp = (await import("@/components/SimpleApp")).default;
     });

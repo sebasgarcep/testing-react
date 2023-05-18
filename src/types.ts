@@ -5,5 +5,5 @@ export type Pokemon = {
 };
 
 export type Client = {
-    getPokemon: () => Pokemon,
+    getPokemon: () => Promise<Pokemon>,
 };

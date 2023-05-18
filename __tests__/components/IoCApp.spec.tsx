@@ -1,33 +1,29 @@
 import { render, renderHook, screen, waitFor } from "@testing-library/react";
 
 import type { Client } from "@/types";
+import { ApiContext, useIoCAppProps, IoCAppView } from "@/components/IoCApp";
 
 import { mockPokemonData } from "../mocks";
 
-describe("SRApp", () => {
-    let useSRAppProps: typeof import("@/components/SRApp").useSRAppProps;
-    let SRAppView: typeof import("@/components/SRApp").SRAppView;
-
+describe("IoCApp", () => {
     const mockClient: Client = {
         getPokemon: jest.fn(),
     };
 
     beforeAll(async () => {
-        jest.mock("../../src/api", () => mockClient);
         (mockClient.getPokemon as jest.Mock).mockResolvedValue(mockPokemonData);
-
-        const SRAppModule = await import("@/components/SRApp");
-        useSRAppProps = SRAppModule.useSRAppProps;
-        SRAppView = SRAppModule.SRAppView;
     });
 
     it("should fetch data", async () => {
-        const { result } = renderHook(() => useSRAppProps());
+        const wrapper = ({ children }: { children: React.ReactNode }) => (
+            <ApiContext.Provider value={mockClient}>{children}</ApiContext.Provider>
+        );
+        const { result } = renderHook(() => useIoCAppProps(), { wrapper });
         await waitFor(() => expect(result.current).toEqual({ data: mockPokemonData }));
     });
 
     it("should render", async () => {
-        render(<SRAppView data={mockPokemonData} />);
+        render(<IoCAppView data={mockPokemonData} />);
         expect(await screen.findByRole("heading")).toHaveTextContent("charmander");
     });
 });
